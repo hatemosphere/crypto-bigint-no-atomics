@@ -1,5 +1,6 @@
 use criterion::{
-    BatchSize, BenchmarkGroup, Criterion, criterion_group, criterion_main, measurement::Measurement,
+    BatchSize, BenchmarkGroup, Criterion, black_box, criterion_group, criterion_main,
+    measurement::Measurement,
 };
 use crypto_bigint::{
     Inverter, Odd, PrecomputeInverter, Random, RandomMod, U256,
@@ -7,7 +8,6 @@ use crypto_bigint::{
 };
 use rand_chacha::ChaChaRng;
 use rand_core::SeedableRng;
-use std::hint::black_box;
 
 #[cfg(feature = "alloc")]
 use crypto_bigint::MultiExponentiate;

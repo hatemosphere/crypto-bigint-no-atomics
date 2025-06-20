@@ -8,9 +8,6 @@ use core::{
 };
 use subtle::{Choice, ConditionallySelectable, ConstantTimeEq, CtOption};
 
-#[cfg(feature = "alloc")]
-use crate::BoxedUint;
-
 #[cfg(feature = "hybrid-array")]
 use crate::{ArrayEncoding, ByteArray};
 
@@ -22,16 +19,6 @@ use serdect::serde::{
     Deserialize, Deserializer, Serialize, Serializer,
     de::{Error, Unexpected},
 };
-
-/// Non-zero unsigned integer.
-pub type NonZeroUint<const LIMBS: usize> = NonZero<Uint<LIMBS>>;
-
-/// Non-zero signed integer
-pub type NonZeroInt<const LIMBS: usize> = NonZero<Int<LIMBS>>;
-
-/// Non-zero boxed unsigned integer.
-#[cfg(feature = "alloc")]
-pub type NonZeroBoxedUint = NonZero<BoxedUint>;
 
 /// Wrapper type for non-zero integers.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, PartialOrd, Ord)]

@@ -187,10 +187,11 @@ pub use crate::{
     int::types::*,
     int::*,
     limb::{Limb, WideWord, Word},
-    non_zero::*,
-    odd::*,
+    non_zero::NonZero,
+    odd::Odd,
     traits::*,
-    uint::{div_limb::Reciprocal, *},
+    uint::div_limb::Reciprocal,
+    uint::*,
     wrapping::Wrapping,
 };
 
@@ -198,6 +199,9 @@ pub use crate::{
 mod macros;
 
 pub mod modular;
+
+#[cfg(feature = "alloc")]
+mod sync_ptr;
 
 #[cfg(feature = "hybrid-array")]
 mod array;

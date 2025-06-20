@@ -16,8 +16,8 @@ pub use extra_sizes::*;
 pub(crate) use ref_type::UintRef;
 
 use crate::{
-    Bounded, ConstChoice, ConstCtOption, ConstZero, Constants, Encoding, FixedInteger, Int,
-    Integer, Limb, NonZero, Odd, PrecomputeInverter, PrecomputeInverterWithAdjuster, Word,
+    Bounded, ConstCtOption, ConstZero, Constants, Encoding, FixedInteger, Int, Integer, Limb,
+    NonZero, Odd, PrecomputeInverter, PrecomputeInverterWithAdjuster, Word,
     modular::{MontyForm, SafeGcdInverter},
 };
 
@@ -212,21 +212,9 @@ impl<const LIMBS: usize> Uint<LIMBS> {
         ConstCtOption::new(Odd(self), self.is_odd())
     }
 
-    /// Interpret this object as an [`Int`] instead.
-    ///
-    /// Note: this is a casting operation. See [`Self::try_into_int`] for the checked equivalent.
-    pub const fn as_int(&self) -> &Int<LIMBS> {
-        #[allow(trivial_casts, unsafe_code)]
-        unsafe {
-            &*(self as *const Uint<LIMBS> as *const Int<LIMBS>)
-        }
-    }
-
-    /// Convert this type into an [`Int`]; returns `None` if this value is greater than `Int::MAX`.
-    ///
-    /// Note: this is the conversion operation. See [`Self::as_int`] for the unchecked equivalent.
-    pub const fn try_into_int(self) -> ConstCtOption<Int<LIMBS>> {
-        Int::new_from_abs_sign(self, ConstChoice::FALSE)
+    /// Interpret the data in this type as an [`Int`] instead.
+    pub const fn as_int(&self) -> Int<LIMBS> {
+        Int::from_bits(*self)
     }
 }
 
@@ -516,7 +504,7 @@ mod tests {
 
     #[cfg(feature = "serde")]
     use crate::U64;
-    use crate::{Encoding, I128, Int, U128};
+    use crate::{Encoding, U128};
 
     #[cfg(target_pointer_width = "64")]
     #[test]
@@ -676,20 +664,5 @@ mod tests {
         let deserialized: U64 = bincode::deserialize_from(serialized.as_slice()).unwrap();
 
         assert_eq!(TEST, deserialized);
-    }
-
-    #[test]
-    fn as_int() {
-        assert_eq!(*U128::ZERO.as_int(), Int::ZERO);
-        assert_eq!(*U128::ONE.as_int(), Int::ONE);
-        assert_eq!(*U128::MAX.as_int(), Int::MINUS_ONE);
-    }
-
-    #[test]
-    fn to_int() {
-        assert_eq!(U128::ZERO.try_into_int().unwrap(), Int::ZERO);
-        assert_eq!(U128::ONE.try_into_int().unwrap(), Int::ONE);
-        assert_eq!(I128::MAX.as_uint().try_into_int().unwrap(), Int::MAX);
-        assert!(bool::from(U128::MAX.try_into_int().is_none()));
     }
 }

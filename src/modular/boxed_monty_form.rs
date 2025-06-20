@@ -11,8 +11,7 @@ mod sub;
 use super::{ConstMontyParams, Retrieve, div_by_2};
 use mul::BoxedMontyMultiplier;
 
-use crate::{BoxedUint, Limb, Monty, Odd, Resize, Word};
-use alloc::sync::Arc;
+use crate::{BoxedUint, Limb, Monty, Odd, Resize, Word, sync_ptr::SharedPtr};
 use subtle::Choice;
 
 #[cfg(feature = "zeroize")]
@@ -21,7 +20,7 @@ use zeroize::Zeroize;
 /// Parameters to efficiently go to/from the Montgomery form for an odd modulus whose size and value
 /// are both chosen at runtime.
 #[derive(Clone, Debug, Eq, PartialEq)]
-pub struct BoxedMontyParams(Arc<BoxedMontyParamsInner>);
+pub struct BoxedMontyParams(SharedPtr<BoxedMontyParamsInner>);
 
 #[derive(Clone, Debug, Eq, PartialEq)]
 struct BoxedMontyParamsInner {

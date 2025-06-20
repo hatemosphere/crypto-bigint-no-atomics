@@ -63,7 +63,6 @@ mod tests {
     }
 
     #[test]
-    #[ignore] // TODO(tarcieri): improve performance
     fn test_bingcd() {
         let mut rng = ChaCha8Rng::from_seed(*b"01234567890123456789012345678901");
         bingcd_tests::<{ U256::LIMBS }>(&mut rng);
